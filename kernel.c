@@ -68,14 +68,44 @@ void term_put_entry_at(char c, uint8_t color, size_t x, size_t y) {
   term_buff[index] = create_vga_entry(c, color);
 }
 
-void term_put_char(char c) {
-  term_put_entry_at(c, term_color, term_column, term_row);
+void term_scroll_down(size_t n) {
+  if (n >= VGA_HEIGHT) {
+    for (size_t y = 0; y < VGA_HEIGHT; y++) {
+      for (size_t x = 0; x < VGA_WIDTH; x++) term_buff[y * VGA_WIDTH + x] = create_vga_entry(' ', term_color);
+    }
 
-  if (++term_column == VGA_WIDTH) {
-    term_column = 0;
+    term_row = 0;
+  } else {
+    for (size_t y = n; y < VGA_HEIGHT; y++) {
+      for (size_t x = 0; x < VGA_WIDTH; x++) term_buff[(y - n) * VGA_WIDTH + x] = term_buff[y * VGA_WIDTH + x];
+    }
 
-    if (++term_row == VGA_HEIGHT) term_row = 0;
+    for (size_t y = VGA_HEIGHT - n; y < VGA_HEIGHT; y++) {
+      for (size_t x = 0; x < VGA_WIDTH; x++) term_buff[y * VGA_WIDTH + x] = create_vga_entry(' ', term_color);
+    }
+
+    term_row = VGA_HEIGHT - n;
   }
+}
+
+void term_put_char(char c) {
+  if (c == '\n') {
+    term_row++;
+    term_column = 0;
+  }
+
+  else {
+    term_put_entry_at(c, term_color, term_column, term_row);
+
+    if (++term_column == VGA_WIDTH) {
+      term_column = 0;
+
+      if (++term_row == VGA_HEIGHT)
+        term_row = 0;
+    }
+  }
+
+  if (term_row == VGA_HEIGHT) term_scroll_down(1);
 }
 
 void term_write(char *data, size_t size) {
@@ -86,5 +116,6 @@ void term_write_str(char *data) { term_write(data, strlen(data)); }
 
 void kernel_main(void) {
   term_init();
-  term_write_str("Hello from Magikaed-OS kernel!");
+  term_write_str("Hello from Magikaed-OS kernel!\n");
+  term_write_str("I'm alive!\n");
 }
