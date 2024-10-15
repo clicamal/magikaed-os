@@ -31,7 +31,7 @@ OS_BIN = magikaed-os.bin
 
 assemble:
 	$(AS) $(BOOT_SRC) -o $(BOOT_OBJ)
-	$(AS) $(LIBK_AS_SRC) -o $(LIBK_AS_OBJ)
+	$(foreach file, $(LIBK_AS_SRC), $(AS) $(file) -o $(file:%.s=%.o);)
 
 compile-libk:
 	$(foreach file, $(LIBK_SRC), $(CC) -c $(file) -o $(file:%.c=%.o) $(CFLAGS);)
