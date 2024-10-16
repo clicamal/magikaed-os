@@ -56,9 +56,24 @@ void term_scroll_down(size_t n) {
 }
 
 void term_put_char(char c) {
-  if (c == '\n') {
+  if (c == '\t') {
+    size_t new_column = term_column + 4;
+
+    if (term_column >= VGA_WIDTH) term_put_char('\n');
+    else term_column = new_column;
+  }
+
+  else if (c == '\n') {
     term_row++;
     term_column = 0;
+  }
+
+  else if (c == '\b') {
+    term_column--;
+
+    term_put_char(' ');
+
+    term_column--;
   }
 
   else {
