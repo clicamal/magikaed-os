@@ -29,29 +29,33 @@ INCLUDE_DIR = $(SYSROOT)/usr/local/include
 
 OS_BIN = magikaed-os.bin
 
-assemble:
+BIN_DEPS = $(BOOT_OBJ) $(LIBK_AS_OBJ) $(LIBK_OBJ) $(LIBC_OBJ) $(KERNEL_OBJ)
+
+$(BOOT_OBJ):
 	$(AS) $(BOOT_SRC) -o $(BOOT_OBJ)
+
+$(LIBK_AS_OBJ):
 	$(foreach file, $(LIBK_AS_SRC), $(AS) $(file) -o $(file:%.s=%.o);)
 
-compile-libk:
+$(LIBK_OBJ):
 	$(foreach file, $(LIBK_SRC), $(CC) -c $(file) -o $(file:%.c=%.o) $(CFLAGS);)
 
-compile-libc:
+$(LIBC_OBJ):
 	$(foreach file, $(LIBC_SRC), $(CC) -c $(file) -o $(file:%.c=%.o) $(CFLAGS);)
 
-compile-kernel: compile-libc compile-libk
-	$(CC) -c $(KERNEL_SRC) -o $(KERNEL_OBJ) $(CFLAGS)
+$(KERNEL_OBJ): $(LIBC_OBJ) $(LIBK_OBJ)
+	$(CC) -c $(KERNEL_SRC) -o $@ $(CFLAGS)
 
-gen-bin: assemble compile-kernel
-	$(CC) -T linker.ld $(BOOT_OBJ) $(KERNEL_OBJ) $(LIBK_OBJ) $(LIBK_AS_OBJ) $(LIBC_OBJ) -o $(OS_BIN) -nostdlib -lgcc
+gen-bin: $(BIN_DEPS)
+	$(CC) -T linker.ld $^ -o $(OS_BIN) -nostdlib -lgcc
+
+emulate: gen-bin
+	qemu-system-i386 -kernel $(OS_BIN)
 
 install-libs:
 	mkdir -p $(INCLUDE_DIR)
 	cp -r $(LIBK_SRC_ROOT)/../../include/kernel $(INCLUDE_DIR)
 	cp -r $(LIBC_SRC_ROOT)/include/* $(INCLUDE_DIR)
 
-emulate: gen-bin
-	qemu-system-i386 -kernel $(OS_BIN)
-
 clean:
-	rm $(BOOT_OBJ) $(KERNEL_OBJ) $(LIBK_OBJ) $(LIBK_AS_OBJ) $(LIBC_OBJ) $(OS_BIN)
+	rm $(BIN_DEPS) $(OS_BIN)
