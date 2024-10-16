@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#define GDT_ENTRIES_COUNT 3
-
 struct gdt_entry {
   uint16_t limit_low;
   uint16_t base_low;

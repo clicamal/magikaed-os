@@ -1,6 +1,8 @@
 #include <kernel/gdt.h>
 #include <stdint.h>
 
+#define GDT_ENTRIES_COUNT 3
+
 static struct gdt_entry gdt[GDT_ENTRIES_COUNT];
 static struct gdt_ptr gdt_p;
 
