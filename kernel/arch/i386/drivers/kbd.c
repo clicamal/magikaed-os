@@ -1,4 +1,3 @@
-#include "kernel/drivers/kbd.h"
 #include <kernel/drivers/kbd.h>
 
 struct kbd_mods_state mods_state;
