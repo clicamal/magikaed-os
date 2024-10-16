@@ -1,5 +1,5 @@
-#include "kernel/pic.h"
-#include "kernel/tty.h"
+#include <kernel/pic.h>
+#include <kernel/tty.h>
 #include <kernel/int.h>
 
 void default_int(void) {
