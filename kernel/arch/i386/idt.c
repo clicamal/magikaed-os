@@ -1,3 +1,4 @@
+#include <kernel/drivers/kbd.h>
 #include <kernel/int.h>
 #include <kernel/idt.h>
 #include <stdint.h>
@@ -21,6 +22,8 @@ void idt_init(void) {
   idt_p.offset = (uint32_t) &idt;
 
   for (int i = 0; i < 256; i++) idt_set_entry(i, (uint32_t) default_isr, 0x08, 0x8E);
+
+  idt_set_entry(KBD_INT_I, (uint32_t) kbd_isr, 0x08, 0x8E);
 
   idt_load((uint32_t) &idt_p);
 }

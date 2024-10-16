@@ -1,3 +1,4 @@
+#include <kernel/drivers/kbd.h>
 #include <kernel/pic.h>
 #include <kernel/idt.h>
 #include <kernel/tty.h>
@@ -25,6 +26,12 @@ void kernel_main(void) {
   pic_init();
 
   term_write_str("PIC Initialized!\n");
+
+  term_write_str("Initializing Keyboard Driver...\n");
+
+  kbd_init();
+
+  term_write_str("Keyboard Driver Initialized. You can start typing!\n");
 
   while (true);
 }
