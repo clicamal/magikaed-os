@@ -1,3 +1,4 @@
+#include <kernel/pic.h>
 #include <kernel/idt.h>
 #include <kernel/tty.h>
 #include <kernel/gdt.h>
@@ -18,6 +19,12 @@ void kernel_main(void) {
   idt_init();
 
   term_write_str("IDT Loaded...\n");
+
+  term_write_str("Initializing PIC...\n");
+
+  pic_init();
+
+  term_write_str("PIC Initialized!\n");
 
   while (true);
 }
