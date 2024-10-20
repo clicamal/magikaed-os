@@ -2,16 +2,17 @@
 #define KBD_H
 
 #include <stdbool.h>
+#include <kernel/pic.h>
+#include <stdint.h>
 
-#define KBD_INT_I 0x21
+#define KBD_INT_I (PIC1 + 1)
 
-struct kbd_mods_state {
-  bool shift_pressed;
-  bool ctrl_pressed;
-  bool alt_pressed;
-};
+bool kbd_key_state[0x59];
+char kbd_ascii_map[0x59];
 
 void kbd_init(void);
-struct kbd_mods_state *kbd_get_mods_state(void);
+bool kbd_get_key_state(uint8_t scancode);
+void kbd_set_key_state(uint8_t scancode, bool state);
+char kbd_get_key_ascii_char(uint8_t scancode);
 
 #endif
