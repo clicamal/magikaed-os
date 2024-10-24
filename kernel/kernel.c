@@ -33,5 +33,11 @@ void kernel_main(void) {
 
   term_write_str("Keyboard Driver Initialized. You can start typing!\n");
 
-  while (true);
+  while (true) {
+    char buffer[256];
+
+    kbd_read(buffer, 256);
+
+    term_write_str(buffer);
+  }
 }

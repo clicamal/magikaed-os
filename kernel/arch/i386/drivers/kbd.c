@@ -1,3 +1,4 @@
+#include <kernel/io.h>
 #include <kernel/drivers/kbd.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -42,4 +43,48 @@ char kbd_get_key_ascii_char(uint8_t scancode) {
   if (scancode >= 0x59) return 0;
 
   return kbd_ascii_map[scancode];
+}
+
+void kbd_wait_ready(void) {
+  while (!(inb(KBD_STATUS_PORT) & 0x01));
+}
+
+uint8_t *kbd_scan(uint8_t *buffer) {
+  kbd_wait_ready();
+
+  *buffer = inb(KBD_DATA_PORT);
+
+  return buffer;
+}
+
+char *kbd_read_char(char *c) {
+  uint8_t scancode;
+
+  do {
+    kbd_scan(&scancode);
+  } while (scancode & 0x80);
+
+  *c = kbd_get_key_ascii_char(scancode);
+
+  return c;
+}
+
+char *kbd_read(char *buffer, int size) {
+  int i = 0;
+
+  while (i < size - 1) {
+    char c;
+
+    kbd_read_char(&c);
+
+    if (c != 0) {
+      buffer[i++] = c;
+
+      if (c == '\n') break;
+    }
+  }
+
+  buffer[i] = '\0';
+
+  return buffer;
 }
