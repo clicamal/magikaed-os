@@ -3,5 +3,5 @@
 #include <kernel/int.h>
 
 void default_int(void) {
-  pic_sendEOI(8);
+  pic_sendEOI(PIC1 + 8);
 }

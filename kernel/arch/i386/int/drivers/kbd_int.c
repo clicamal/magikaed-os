@@ -1,5 +1,3 @@
-#include <kernel/io.h>
-#include <kernel/tty.h>
 #include <kernel/drivers/kbd.h>
 #include <kernel/int.h>
 #include <kernel/pic.h>
