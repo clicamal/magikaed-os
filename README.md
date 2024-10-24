@@ -1,6 +1,6 @@
 # Magikaed OS
 
-Um sitema operacional x86 simples. Criado seguindo o tutorial da https://wiki.osdev.org
+Um sistema operacional x86 simples. Criado seguindo o tutorial da https://wiki.osdev.org
 
 ## Emulando o sistema
 
