@@ -13,7 +13,7 @@
 #define PIC_EOI 0x20
 
 static inline void pic_sendEOI(uint8_t irq) {
-  if (irq >= 8) outb(PIC2_CMD, PIC_EOI);
+  if (irq >= PIC1 + 8) outb(PIC2_CMD, PIC_EOI);
   outb(PIC1_CMD, PIC_EOI);
 }
 
