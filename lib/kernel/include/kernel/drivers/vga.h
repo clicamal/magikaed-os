@@ -1,6 +1,7 @@
-#ifndef KERNEL_VGA_H
-#define KERNEL_VGA_H
+#ifndef VGA_H
+#define VGA_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 enum vga_color {
@@ -28,7 +29,16 @@ static inline uint8_t create_vga_entry_color(enum vga_color fg,
 }
 
 static inline uint16_t create_vga_entry(unsigned char uc, uint8_t color) {
-  return (uint16_t) uc | (uint16_t) color << 8;
+  return (uint16_t)uc | (uint16_t)color << 8;
 }
 
+void vga_init(void);
+void vga_set_color(uint8_t color);
+void vga_put_entry_at(char c, uint8_t color, size_t x, size_t y);
+void vga_scroll_down(size_t n);
+void vga_put_char(char c);
+void vga_write(char *data, size_t size);
+void vga_write_str(char *data);
+
 #endif
+
