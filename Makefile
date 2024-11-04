@@ -13,16 +13,23 @@ AS_SRC = $(shell find . -name "*.s")
 OBJ = $(AS_SRC:%.s=%.o) $(SRC:%.c=%.o)
 
 OS_BIN = magikaed-os.bin
+OS_MEM_SIZE = 4G
+
+DISK_IMG = disk.img
+DISK_SIZE = 1G
 
 $(OBJ):
 	$(foreach as_file, $(AS_SRC), $(AS) $(as_file) -o $(as_file:%.s=%.o);)
 	$(foreach c_file, $(SRC), $(CC) $(CFLAGS) -c $(c_file) -o $(c_file:%.c=%.o);)
 
-gen-bin: $(OBJ)
-	$(CC) -T linker.ld $(OBJ) -o $(OS_BIN) -nostdlib -lgcc
+$(DISK_IMG):
+	qemu-img create -f raw disk.img $(DISK_SIZE)
 
-emulate: gen-bin
-	qemu-system-i386 -kernel $(OS_BIN)
+$(OS_BIN): $(OBJ)
+	$(CC) -T linker.ld $(OBJ) -o $@ -nostdlib -lgcc
+
+emulate: $(OS_BIN) $(DISK_IMG)
+	qemu-system-i386 -kernel $(OS_BIN) -hda $(DISK_IMG) -boot d -m $(OS_MEM_SIZE)
 
 clean:
 	@rm -f $(OBJ) $(OS_BIN)
