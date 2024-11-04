@@ -1,14 +1,16 @@
 #include <kernel/drivers/ata.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <kernel/drivers/kbd.h>
-#include <kernel/pic.h>
-#include <kernel/idt.h>
 #include <kernel/drivers/vga.h>
 #include <kernel/gdt.h>
+#include <kernel/idt.h>
+#include <kernel/pic.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 
-void kernel_main(void) {
+void
+kernel_main(void)
+{
   vga_init();
   printf("Hello from Magikaed-OS kernel!\n");
 
@@ -41,8 +43,8 @@ void kernel_main(void) {
   char ata_write_test[] = { "HELLO" };
   char ata_read_test[5];
 
-  ata_write(0, (uint8_t *) ata_write_test, 1);
-  ata_read(0, (uint8_t *) ata_read_test, 1);
+  ata_write(0, (uint8_t*)ata_write_test, 1);
+  ata_read(0, (uint8_t*)ata_read_test, 1);
 
   printf("This is a test for ata_write/ata_read: %s\n", ata_read_test);
 

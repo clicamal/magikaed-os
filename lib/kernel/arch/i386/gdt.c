@@ -6,8 +6,14 @@
 static struct gdt_entry gdt[GDT_ENTRIES_COUNT];
 static struct gdt_ptr gdt_p;
 
-void gdt_set_entry(int index, uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity) {
-  struct gdt_entry *entry = &gdt[index];
+void
+gdt_set_entry(int index,
+              uint32_t base,
+              uint32_t limit,
+              uint8_t access,
+              uint8_t granularity)
+{
+  struct gdt_entry* entry = &gdt[index];
 
   entry->base_low = (base & 0xFFFF);
   entry->base_mid = (base >> 16) & 0xFF;
@@ -20,13 +26,15 @@ void gdt_set_entry(int index, uint32_t base, uint32_t limit, uint8_t access, uin
   entry->access = access;
 }
 
-void gdt_init(void) {
+void
+gdt_init(void)
+{
   gdt_p.limit = sizeof(gdt) - 1;
-  gdt_p.base = (uint32_t) &gdt;
+  gdt_p.base = (uint32_t)&gdt;
 
   gdt_set_entry(0, 0, 0, 0, 0);
   gdt_set_entry(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
   gdt_set_entry(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
-  gdt_load((uint32_t) &gdt_p);
+  gdt_load((uint32_t)&gdt_p);
 }

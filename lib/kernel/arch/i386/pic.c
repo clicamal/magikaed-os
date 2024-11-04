@@ -11,7 +11,9 @@
 
 #define ICW4_8086 0x01
 
-void pic_init(void) {
+void
+pic_init(void)
+{
   uint8_t a = inb(PIC1_DATA);
   uint8_t b = inb(PIC2_DATA);
 
