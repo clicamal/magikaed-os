@@ -1,7 +1,6 @@
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H
 
-#include <kernel/queue.h>
 #include <stdbool.h>
 
 struct semaphore {
