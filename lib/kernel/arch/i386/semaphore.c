@@ -1,5 +1,4 @@
 #include <kernel/semaphore.h>
-#include <stdlib.h>
 
 void
 semaphore_init(struct semaphore* sem)
