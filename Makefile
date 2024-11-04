@@ -9,6 +9,7 @@ LIBC_SRC_ROOT = ./lib/libc
 CFLAGS = -I$(LIBK_SRC_ROOT)/../../include -I$(LIBC_SRC_ROOT)/include -ffreestanding -std=gnu99 -O2 -Wall -Wextra
 
 SRC = $(shell find . -name "*.c")
+HEADERS = $(shell find . -name "*.h")
 AS_SRC = $(shell find . -name "*.s")
 OBJ = $(AS_SRC:%.s=%.o) $(SRC:%.c=%.o)
 
@@ -34,5 +35,8 @@ emulate: $(OS_BIN) $(DISK_IMG)
 clean:
 	@rm -f $(OBJ) $(OS_BIN)
 
+lint:
+	@echo $(SRC) $(HEADERS) | xargs clang-format -style=mozilla -i
+
 test:
-	@echo $(SRC)
+	@xargs
