@@ -11,22 +11,28 @@
 inline bool
 ata_ready(void)
 {
-  return (inb(ATA_PRIM_IO + 7) & 0x40);
+  uint8_t status = inb(ATA_PRIM_IO + 7);
+
+  io_wait();
+
+  return (status & 0x40) != 0;
 }
 
 inline bool
 ata_busy(void)
 {
-  return (inb(ATA_PRIM_IO + 7) & 0x80);
+  uint8_t status = inb(ATA_PRIM_IO + 7);
+
+  io_wait();
+
+  return (status & 0x80) != 0;
 }
 
 inline void
 ata_prepare(uint32_t lba, uint32_t nsectors)
 {
   while (ata_busy())
-    io_wait();
-
-  io_wait();
+    ;
 
   outb(ATA_PRIM_IO + 2, nsectors);
   io_wait();

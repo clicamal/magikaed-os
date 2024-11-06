@@ -12,17 +12,15 @@ ata_read(uint32_t lba, uint8_t* buffer, uint32_t nsectors)
 
   for (uint32_t sector = 0; sector < nsectors; sector++) {
     while (!ata_ready())
-      io_wait();
-
-    io_wait();
+      ;
 
     for (int i = 0; i < ATA_SECTOR_SIZE / 2; i++) {
       ((uint16_t*)buffer)[i] = inw(ATA_PRIM_IO);
       io_wait();
     }
-  }
 
-  buffer += ATA_SECTOR_SIZE;
+    buffer += ATA_SECTOR_SIZE;
+  }
 }
 
 void
@@ -35,9 +33,7 @@ ata_write(uint32_t lba, uint8_t* buffer, uint32_t nsectors)
 
   for (uint32_t sector = 0; sector < nsectors; sector++) {
     while (!ata_ready())
-      io_wait();
-
-    io_wait();
+      ;
 
     for (int i = 0; i < ATA_SECTOR_SIZE / 2; i++) {
       outw(ATA_PRIM_IO, ((uint16_t*)buffer)[i]);
@@ -46,6 +42,4 @@ ata_write(uint32_t lba, uint8_t* buffer, uint32_t nsectors)
 
     buffer += ATA_SECTOR_SIZE;
   }
-
-  buffer += ATA_SECTOR_SIZE;
 }
