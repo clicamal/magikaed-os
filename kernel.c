@@ -1,4 +1,4 @@
-#include <kernel/drivers/ata.h>
+#include <kernel/drivers/fat.h>
 #include <kernel/drivers/kbd.h>
 #include <kernel/drivers/vga.h>
 #include <kernel/gdt.h>
@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 void
 kernel_main(void)
@@ -40,13 +41,16 @@ kernel_main(void)
 
   printf("This is a test for printf! num = %d, -num = %d\n", 123, -123);
 
-  char ata_write_test[] = { "HELLO" };
-  char ata_read_test[5];
+  struct fat_bootsector fat_boosector;
+  char drive_label[6];
 
-  ata_write(0, (uint8_t*)ata_write_test, 1);
-  ata_read(0, (uint8_t*)ata_read_test, 1);
+  fat_load_bootsector(&fat_boosector);
 
-  printf("This is a test for ata_write/ata_read: %s\n", ata_read_test);
+  memcpy(drive_label, fat_boosector.fat32_ext.vol_label, 4);
+
+  drive_label[5] = '\0';
+
+  printf("Using drive: %s\n", drive_label);
 
   while (true) {
     char buffer[256];
