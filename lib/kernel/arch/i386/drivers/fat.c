@@ -5,5 +5,5 @@
 void
 fat_load_bootsector(struct fat_bootsector* buffer)
 {
-  ata_read(0, (uint8_t*)buffer, 1);
+  ata_read(0, 1, (uint16_t*)buffer);
 }

@@ -60,7 +60,7 @@ struct fat_bootsector
   uint16_t nsectors_per_track;
   uint16_t nheads;
   uint32_t nhidden_sectors;
-  uint32_t nlarge_sector;
+  uint32_t nlarge_sectors;
   uint8_t ext[476];
 } __attribute__((packed));
 
@@ -80,7 +80,7 @@ struct fat_entry
   uint32_t size;
 } __attribute__((packed));
 
-typedef uint8_t fat[ATA_SECTOR_SIZE];
+typedef uint8_t fat[512];
 
 void
 fat_load_bootsector(struct fat_bootsector* buffer);

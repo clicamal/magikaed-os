@@ -3,43 +3,41 @@
 #include <stdint.h>
 
 void
-ata_read(uint32_t lba, uint8_t* buffer, uint32_t nsectors)
+ata_read(uint32_t lba, uint8_t nsectors, uint16_t* buffer)
 {
-  ata_prepare(lba, nsectors);
+  outb(0x1F6, ((lba >> 24) & 0x0F) | 0xE0);
+  outb(0x1F2, nsectors);
+  outb(0x1F3, lba & 0xFF);
+  outb(0x1F4, (lba >> 8) & 0xFF);
+  outb(0x1F5, (lba >> 16) & 0xFF);
+  outb(0x1F7, 0x20);
 
-  outb(ATA_PRIM_IO + 7, 0x20);
-  io_wait();
+  while (!(inb(0x1F7) & 0x08))
+    ;
 
-  for (uint32_t sector = 0; sector < nsectors; sector++) {
-    while (!ata_ready())
-      ;
+  uint32_t total_words = nsectors * 256;
 
-    for (int i = 0; i < ATA_SECTOR_SIZE / 2; i++) {
-      ((uint16_t*)buffer)[i] = inw(ATA_PRIM_IO);
-      io_wait();
-    }
-
-    buffer += ATA_SECTOR_SIZE;
+  for (uint32_t i = 0; i < total_words; i++) {
+    buffer[i] = inw(0x1F0);
   }
 }
 
 void
-ata_write(uint32_t lba, uint8_t* buffer, uint32_t nsectors)
+ata_lba_write(uint32_t lba, uint8_t nsectors, const uint16_t* buffer)
 {
-  ata_prepare(lba, nsectors);
+  outb(0x1F6, ((lba >> 24) & 0x0F) | 0xE0);
+  outb(0x1F2, nsectors);
+  outb(0x1F3, lba & 0xFF);
+  outb(0x1F4, (lba >> 8) & 0xFF);
+  outb(0x1F5, (lba >> 16) & 0xFF);
+  outb(0x1F7, 0x30);
 
-  outb(ATA_PRIM_IO + 7, 0x30);
-  io_wait();
+  while (!(inb(0x1F7) & 0x08))
+    ;
 
-  for (uint32_t sector = 0; sector < nsectors; sector++) {
-    while (!ata_ready())
-      ;
+  uint32_t total_words = nsectors * 256;
 
-    for (int i = 0; i < ATA_SECTOR_SIZE / 2; i++) {
-      outw(ATA_PRIM_IO, ((uint16_t*)buffer)[i]);
-      io_wait();
-    }
-
-    buffer += ATA_SECTOR_SIZE;
+  for (uint32_t i = 0; i < total_words; i++) {
+    outw(0x1F0, buffer[i]);
   }
 }

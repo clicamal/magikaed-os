@@ -31,7 +31,7 @@ $(OS_BIN): $(OBJ)
 	$(CC) -T linker.ld $(OBJ) -o $@ -nostdlib -lgcc
 
 emulate: $(OS_BIN) $(DISK_IMG)
-	qemu-system-i386 -kernel $(OS_BIN) -drive file=$(DISK_IMG),format=raw -m $(OS_MEM_SIZE)
+	qemu-system-i386 -kernel $(OS_BIN) -drive file=$(DISK_IMG),format=raw,index=0,media=disk,if=ide -boot c -m $(OS_MEM_SIZE)
 
 clean:
 	@rm -f $(OBJ) $(OS_BIN)

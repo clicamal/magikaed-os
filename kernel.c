@@ -41,13 +41,13 @@ kernel_main(void)
 
   printf("This is a test for printf! num = %d, -num = %d\n", 123, -123);
 
-  struct fat_bootsector fat_boosector;
+  struct fat_bootsector fat_bootsector;
   struct fat32_ext_bootrecord* fat32_ext;
   char vol_label[12];
 
-  fat_load_bootsector(&fat_boosector);
+  fat_load_bootsector(&fat_bootsector);
 
-  fat32_ext = (struct fat32_ext_bootrecord*)&fat_boosector.ext;
+  fat32_ext = (struct fat32_ext_bootrecord*)&fat_bootsector.ext;
 
   memcpy(vol_label, fat32_ext->vol_label, 10);
 
