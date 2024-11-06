@@ -30,8 +30,6 @@ struct fat32_ext_bootrecord
   uint32_t vol_ID;
   uint8_t vol_label[11];
   uint8_t sys_ID[8];
-  uint8_t boot_code[420];
-  uint16_t boot_signature;
 } __attribute__((packed));
 
 struct fat32_fs_info
@@ -61,7 +59,7 @@ struct fat_bootsector
   uint16_t nheads;
   uint32_t nhidden_sectors;
   uint32_t nlarge_sector;
-  struct fat32_ext_bootrecord fat32_ext;
+  uint8_t ext[54];
 } __attribute__((packed));
 
 struct fat_entry

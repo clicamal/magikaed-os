@@ -42,15 +42,18 @@ kernel_main(void)
   printf("This is a test for printf! num = %d, -num = %d\n", 123, -123);
 
   struct fat_bootsector fat_boosector;
-  char drive_label[6];
+  struct fat32_ext_bootrecord* fat32_ext;
+  char vol_label[12];
 
   fat_load_bootsector(&fat_boosector);
 
-  memcpy(drive_label, fat_boosector.fat32_ext.vol_label, 4);
+  fat32_ext = (struct fat32_ext_bootrecord*)&fat_boosector.ext;
 
-  drive_label[5] = '\0';
+  memcpy(vol_label, fat32_ext->vol_label, 10);
 
-  printf("Using drive: %s\n", drive_label);
+  vol_label[11] = '\0';
+
+  printf("Using volume: %s\n", vol_label);
 
   while (true) {
     char buffer[256];

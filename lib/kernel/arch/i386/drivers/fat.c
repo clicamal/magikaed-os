@@ -5,7 +5,5 @@
 void
 fat_load_bootsector(struct fat_bootsector* buffer)
 {
-  ata_read(0,
-           (uint8_t*)buffer,
-           (uint32_t)sizeof(struct fat_bootsector) / ATA_SECTOR_SIZE);
+  ata_read(0, (uint8_t*)buffer, 1);
 }
