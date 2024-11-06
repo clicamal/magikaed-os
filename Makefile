@@ -25,13 +25,13 @@ $(OBJ):
 
 $(DISK_IMG):
 	qemu-img create -f raw $(DISK_IMG) $(DISK_SIZE)
-	sudo mkfs.fat -F 32 -n "MAGE" -v $(DISK_IMG)
+	sudo mkfs.fat -F 32 -n "MAGIKAED" -v $(DISK_IMG)
 
 $(OS_BIN): $(OBJ)
 	$(CC) -T linker.ld $(OBJ) -o $@ -nostdlib -lgcc
 
 emulate: $(OS_BIN) $(DISK_IMG)
-	qemu-system-i386 -kernel $(OS_BIN) -drive file=$(DISK_IMG),format=raw -boot d -m $(OS_MEM_SIZE)
+	qemu-system-i386 -kernel $(OS_BIN) -drive file=$(DISK_IMG),format=raw -m $(OS_MEM_SIZE)
 
 clean:
 	@rm -f $(OBJ) $(OS_BIN)
