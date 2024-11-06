@@ -24,13 +24,24 @@ inline void
 ata_prepare(uint32_t lba, uint32_t nsectors)
 {
   while (ata_busy())
-    ;
+    io_wait();
+
+  io_wait();
 
   outb(ATA_PRIM_IO + 2, nsectors);
+  io_wait();
+
   outb(ATA_PRIM_IO + 3, (uint8_t)lba);
+  io_wait();
+
   outb(ATA_PRIM_IO + 4, (uint8_t)(lba >> 8));
+  io_wait();
+
   outb(ATA_PRIM_IO + 5, (uint8_t)(lba >> 16));
+  io_wait();
+
   outb(ATA_PRIM_IO + 6, 0xE0 | ((lba >> 24) & 0x0F));
+  io_wait();
 }
 
 void
